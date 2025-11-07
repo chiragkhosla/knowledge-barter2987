@@ -1,0 +1,130 @@
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { collection, addDoc } from "firebase/firestore";
+import { db } from "./firebase";
+
+export default function PostSkill() {
+  const [name, setName] = useState("");
+  const [teach, setTeach] = useState("");
+  const [learn, setLearn] = useState("");
+  const [level, setLevel] = useState("");
+  const [category, setCategory] = useState("");
+  const navigate = useNavigate();
+
+  const handlePost = async () => {
+    if (!name || !teach || !learn || !level || !category) {
+      alert("⚠️ Please fill all fields including category!");
+      return;
+    }
+
+    try {
+      await addDoc(collection(db, "skills"), {
+        name,
+        teach,
+        learn,
+        level,
+        category,
+        createdAt: new Date(),
+      });
+
+      alert("✅ Skill posted successfully!");
+    } catch (error) {
+      console.error("❌ Error posting skill:", error);
+      alert("Error saving skill to database. Please try again!");
+    }
+  };
+
+  return (
+    <div
+      className="min-h-screen flex flex-col justify-between"
+      style={{
+        backgroundImage: "url('/bg.jpg')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
+      <div className="w-full flex justify-between items-center bg-gradient-to-r from-violet-600 to-purple-500 text-white py-4 px-6 shadow-md">
+        <h1 className="font-bold text-2xl cursor-pointer" onClick={() => navigate("/home")}>
+          Knowledge Barter
+        </h1>
+
+        <div className="flex gap-4">
+          <button
+            onClick={() => navigate("/post-skill")}
+            className="bg-white text-violet-600 font-semibold px-3 py-1 rounded-lg hover:bg-violet-100 transition"
+          >
+            Post Skill
+          </button>
+          <button
+            onClick={() => navigate("/browse-skill")}
+            className="bg-white text-violet-600 font-semibold px-3 py-1 rounded-lg hover:bg-violet-100 transition"
+          >
+            Browse Skills
+          </button>
+        </div>
+      </div>
+
+
+      <div className="flex flex-1 justify-center items-center">
+        <div className="bg-white p-8 rounded-2xl shadow-lg w-[350px] border border-gray-200">
+          <h1 className="text-2xl font-bold mb-4 text-violet-600 text-center">
+            Post a Skill
+          </h1>
+          <div className="flex flex-col gap-3 w-full">
+            <input
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Your Name"
+              className="border border-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500"
+            />
+            <input
+              value={teach}
+              onChange={(e) => setTeach(e.target.value)}
+              placeholder="Skill you teach"
+              className="border border-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500"
+            />
+            <select
+              value={level}
+              onChange={(e) => setLevel(e.target.value)}
+              className="border border-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500"
+            >
+              <option value="">Select Level</option>
+              <option value="Beginner">Beginner</option>
+              <option value="Intermediate">Intermediate</option>
+              <option value="Expert">Expert</option>
+            </select>
+            <input
+              value={learn}
+              onChange={(e) => setLearn(e.target.value)}
+              placeholder="Skill you want to learn"
+              className="border border-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500"
+            />
+            <select
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              className="border border-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500"
+            >
+              <option value="">Select Category</option>
+              <option value="UI Design">UI Design</option>
+              <option value="DSA">DSA</option>
+              <option value="Web Dev">Web Dev</option>
+              <option value="Creative Skill">Creative Skill</option>
+            </select>
+
+            <button
+              onClick={handlePost}
+              className="mt-3 bg-gradient-to-r from-violet-600 to-purple-500 text-white px-4 py-2 rounded-lg hover:opacity-90 font-medium transition duration-200"
+            >
+              Post Skill
+            </button>
+          </div>
+        </div>
+      </div>
+
+
+      <footer className="w-full bg-violet-600 py-4 shadow-inner text-center text-white text-sm">
+        © 2025 Knowledge Barter. All rights reserved.
+      </footer>
+    </div>
+  );
+}
