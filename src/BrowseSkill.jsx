@@ -33,6 +33,7 @@ export default function BrowseSkills() {
     fetchSkills();
   }, [location.key]);
 
+  // 🔹 Show suggestions (no filtering here)
   const handleInputChange = (e) => {
     const value = e.target.value.toLowerCase();
     setSearchValue(e.target.value);
@@ -49,10 +50,10 @@ export default function BrowseSkills() {
     setSuggestions(filtered.slice(0, 5));
   };
 
+
   const handleSuggestionClick = (suggestion) => {
     setSearchValue(suggestion);
-    setSuggestions([]);
-    document.getElementById("inp").value = suggestion;
+    setSuggestions([]); // hide dropdown
   };
 
   const handleSearch = () => {
@@ -178,7 +179,7 @@ export default function BrowseSkills() {
             {filteredCards.map((card, index) => (
               <div
                 key={index}
-                className="skill-card h-[180px] w-full sm:w-[300px] p-5 border-2 rounded-lg flex flex-col gap-3 bg-white 
+                className="skill-card h-[180px] w-full sm:w-[300px] p-5  rounded-lg flex flex-col gap-3 bg-white 
                 shadow-md transition-transform duration-300 ease-out 
                 hover:-translate-y-2 hover:shadow-2xl hover:scale-[1.04]"
               >
