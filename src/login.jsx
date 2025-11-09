@@ -11,6 +11,14 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleLogin = async () => {
+    setMessage("");
+    setMessageClass("");
+
+    if (!email || !password) {
+      setMessage("⚠️ Please fill all the required fields!");
+      setMessageClass("text-center mt-2 text-red-600");
+      return;
+    }
     try {
       await signInWithEmailAndPassword(auth, email.trim(), password.trim());
       setMessage("✅ Login successful! Redirecting...");

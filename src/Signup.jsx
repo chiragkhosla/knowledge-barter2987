@@ -9,9 +9,19 @@ const Signup = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState("");
   const [messageClass, setMessageClass] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleRegistration = async () => {
+    setMessage("");
+    setMessageClass("");
+
+    if (!email || !password || !confirmPassword) {
+      setMessage("⚠️ Please fill all the required fields!");
+      setMessageClass("text-center mt-2 text-red-600");
+      return;
+    }
+
     if (password !== confirmPassword) {
       setMessage("⚠️ Passwords do not match!");
       setMessageClass("text-center mt-2 text-red-600");
@@ -25,13 +35,30 @@ const Signup = () => {
     }
 
     try {
+      setLoading(true);
       await createUserWithEmailAndPassword(auth, email.trim(), password.trim());
       setMessage("✅ Registration successful! Redirecting to Login...");
       setMessageClass("text-center mt-2 text-green-600");
+
+      // clear form
+      setEmail("");
+      setPassword("");
+      setConfirmPassword("");
+
       setTimeout(() => navigate("/login"), 1500);
     } catch (error) {
-      setMessage(`❌ ${error.message}`);
+      let errorMsg = "❌ Something went wrong!";
+      if (error.code === "auth/email-already-in-use") {
+        errorMsg = "⚠️ This email is already registered.";
+      } else if (error.code === "auth/invalid-email") {
+        errorMsg = "⚠️ Invalid email address.";
+      } else if (error.code === "auth/weak-password") {
+        errorMsg = "⚠️ Password should be at least 6 characters.";
+      }
+      setMessage(errorMsg);
       setMessageClass("text-center mt-2 text-red-600");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -45,14 +72,14 @@ const Signup = () => {
         backgroundPosition: "center",
       }}
     >
-
+      {/* Header */}
       <header className="w-full bg-violet-600 py-4 shadow-md">
         <h1 className="text-center text-3xl font-bold text-white">
           Knowledge Barter
         </h1>
       </header>
 
-
+      {/* Form */}
       <main className="flex-grow flex justify-center items-center">
         <div className="bg-white p-8 rounded-lg shadow-lg flex flex-col gap-4 w-80">
           <p className="text-2xl font-bold text-center">Sign Up</p>
@@ -79,11 +106,15 @@ const Signup = () => {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
             />
+
             <button
-              className="bg-violet-600 text-white rounded py-2 hover:bg-violet-700"
+              className={`bg-violet-600 text-white rounded py-2 hover:bg-violet-700 transition ${
+                loading ? "opacity-70 cursor-not-allowed" : ""
+              }`}
               onClick={handleRegistration}
+              disabled={loading}
             >
-              Sign Up
+              {loading ? "Registering..." : "Sign Up"}
             </button>
           </div>
 
@@ -98,7 +129,7 @@ const Signup = () => {
         </div>
       </main>
 
-
+      {/* Footer */}
       <footer className="w-full bg-violet-600 py-4 shadow-inner mt-auto">
         <p className="text-center text-white text-sm">
           © 2025 Knowledge Barter. All rights reserved.

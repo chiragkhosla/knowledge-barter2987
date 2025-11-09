@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { collection, getDocs } from "firebase/firestore";
-import { db } from "./firebase"; // ✅ Import Firestore instance
+import { db } from "./firebase";
 
 export default function BrowseSkills() {
   const [cards, setCards] = useState([]);
@@ -10,6 +10,7 @@ export default function BrowseSkills() {
   const [searchValue, setSearchValue] = useState("");
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const fetchSkills = async () => {
@@ -30,7 +31,7 @@ export default function BrowseSkills() {
     };
 
     fetchSkills();
-  }, []);
+  }, [location.key]);
 
   const handleInputChange = (e) => {
     const value = e.target.value.toLowerCase();
@@ -68,7 +69,9 @@ export default function BrowseSkills() {
   };
 
   return (
-    <section id="Browse_skills" className="flex flex-col flex-grow min-h-screen"
+    <section
+      id="Browse_skills"
+      className="flex flex-col flex-grow min-h-screen"
       style={{
         backgroundImage: "url('/bg.jpg')",
         backgroundSize: "cover",
@@ -77,7 +80,10 @@ export default function BrowseSkills() {
     >
       {/* Header */}
       <div className="w-full flex justify-between items-center bg-gradient-to-r from-violet-600 to-purple-500 text-white py-4 px-6 shadow-md">
-        <h1 className="font-bold text-2xl cursor-pointer" onClick={() => navigate("/home")}>
+        <h1
+          className="font-bold text-2xl cursor-pointer"
+          onClick={() => navigate("/home")}
+        >
           Knowledge Barter
         </h1>
 
@@ -89,7 +95,7 @@ export default function BrowseSkills() {
             Post Skill
           </button>
           <button
-            onClick={() => navigate("/browse")}
+            onClick={() => navigate("/browse-skill")}
             className="bg-white text-violet-600 font-semibold px-3 py-1 rounded-lg hover:bg-violet-100 transition"
           >
             Browse Skills
@@ -180,7 +186,7 @@ export default function BrowseSkills() {
                 <p className="text-gray-700">{card.learn}</p>
                 <p className="text-sm text-gray-500">{card.category}</p>
                 <button
-                  onClick={() => navigate(`/view/${encodeURIComponent(card.teach)}`)}
+                  onClick={() => navigate(`/view/${encodeURIComponent(card.teach)}`)}  
                   className="w-[100px] py-1 font-bold bg-violet-500 rounded-lg text-white hover:bg-violet-600"
                 >
                   View

@@ -44,7 +44,10 @@ export default function PostSkill() {
       }}
     >
       <div className="w-full flex justify-between items-center bg-gradient-to-r from-violet-600 to-purple-500 text-white py-4 px-6 shadow-md">
-        <h1 className="font-bold text-2xl cursor-pointer" onClick={() => navigate("/home")}>
+        <h1
+          className="font-bold text-2xl cursor-pointer"
+          onClick={() => navigate("/home")}
+        >
           Knowledge Barter
         </h1>
 
@@ -55,15 +58,22 @@ export default function PostSkill() {
           >
             Post Skill
           </button>
+
+          
           <button
-            onClick={() => navigate("/browse-skill")}
+            onClick={() => {
+              if (window.location.pathname === "/browse-skill") {
+                window.location.reload();
+              } else {
+                navigate("/browse-skill");
+              }
+            }}
             className="bg-white text-violet-600 font-semibold px-3 py-1 rounded-lg hover:bg-violet-100 transition"
           >
             Browse Skills
           </button>
         </div>
       </div>
-
 
       <div className="flex flex-1 justify-center items-center">
         <div className="bg-white p-8 rounded-2xl shadow-lg w-[350px] border border-gray-200">
@@ -120,7 +130,6 @@ export default function PostSkill() {
           </div>
         </div>
       </div>
-
 
       <footer className="w-full bg-violet-600 py-4 shadow-inner text-center text-white text-sm">
         © 2025 Knowledge Barter. All rights reserved.
