@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth } from "./firebase";
 
@@ -8,10 +8,17 @@ export default function PostSkill() {
   const [learn, setLearn] = useState("");
   const [level, setLevel] = useState("");
   const [category, setCategory] = useState("");
+  const [isScrolled, setIsScrolled] = useState(false);
   const navigate = useNavigate();
 
   const API_URL =
     "https://firestore.googleapis.com/v1/projects/knowledge-barter-99eaa/databases/(default)/documents/skills?key=AIzaSyALqQrKm5fR0qEZ89jmaq3ulfhWZMwuce4";
+
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const handlePost = async () => {
     if (!name || !teach || !learn || !level || !category) {
@@ -65,34 +72,25 @@ export default function PostSkill() {
         backgroundPosition: "center",
       }}
     >
-      {/* Navbar */}
-      <div className="w-full flex justify-between items-center bg-violet-600 bg-opacity-90 text-white py-4 px-6 shadow-md">
+      {/* 🔹 Scroll-based Header */}
+      <div
+        className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
+          isScrolled
+            ? "bg-white/10 backdrop-blur-md border-b border-white/20 shadow-md"
+            : "bg-violet-600"
+        } py-4 px-6 flex justify-between items-center`}
+      >
         <h1
-          className="font-bold text-2xl cursor-pointer"
+          className="font-bold text-2xl text-white cursor-pointer drop-shadow-md"
           onClick={() => navigate("/home")}
         >
-          Knowledge<span className="text-violet-200">Barter</span>
+          Knowledge Barter
         </h1>
-
-        <div className="flex gap-4">
-          <button
-            onClick={() => navigate("/post-skill")}
-            className="bg-white text-violet-600 font-semibold px-3 py-1 rounded-lg hover:bg-violet-100 transition"
-          >
-            Post Skill
-          </button>
-          <button
-            onClick={() => navigate("/browse-skill")}
-            className="bg-white text-violet-600 font-semibold px-3 py-1 rounded-lg hover:bg-violet-100 transition"
-          >
-            Browse Skills
-          </button>
-        </div>
       </div>
 
-      {/* Center Form */}
-      <div className="flex flex-1 justify-center items-center">
-        <div className="bg-white/95 p-8 rounded-2xl shadow-lg w-[350px] border border-gray-200">
+
+      <div className="flex flex-1 justify-center items-center mt-20">
+        <div className="bg-white/90 backdrop-blur-md p-8 rounded-2xl shadow-lg w-[350px] border border-gray-200">
           <h1 className="text-2xl font-bold mb-4 text-violet-600 text-center">
             Post a Skill
           </h1>
@@ -148,8 +146,8 @@ export default function PostSkill() {
       </div>
 
       {/* Footer */}
-      <footer className="w-full bg-violet-600 bg-opacity-90 py-4 text-center text-white text-sm">
-        © 2025 <span className="font-semibold">KnowledgeBarter</span>. All rights reserved.
+      <footer className="w-full bg-violet-600 py-4 shadow-inner text-center text-white text-sm">
+        © 2025 Knowledge Barter. All rights reserved.
       </footer>
     </div>
   );
