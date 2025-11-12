@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { auth } from "./firebase"; 
+import { auth } from "./firebase";
 
 export default function PostSkill() {
   const [name, setName] = useState("");
@@ -34,8 +34,8 @@ export default function PostSkill() {
         level: { stringValue: level },
         category: { stringValue: category },
         createdAt: { timestampValue: new Date().toISOString() },
-        posterUid: { stringValue: user.uid }, 
-        posterEmail: { stringValue: user.email }, 
+        posterUid: { stringValue: user.uid },
+        posterEmail: { stringValue: user.email },
       },
     };
 
@@ -66,20 +66,33 @@ export default function PostSkill() {
       }}
     >
       {/* Navbar */}
-      <div className="w-full flex justify-between items-center bg-gradient-to-r from-violet-600 to-purple-500 text-white py-4 px-6 shadow-md">
+      <div className="w-full flex justify-between items-center bg-violet-600 bg-opacity-90 text-white py-4 px-6 shadow-md">
         <h1
           className="font-bold text-2xl cursor-pointer"
           onClick={() => navigate("/home")}
         >
-          Knowledge Barter
+          Knowledge<span className="text-violet-200">Barter</span>
         </h1>
 
-        
+        <div className="flex gap-4">
+          <button
+            onClick={() => navigate("/post-skill")}
+            className="bg-white text-violet-600 font-semibold px-3 py-1 rounded-lg hover:bg-violet-100 transition"
+          >
+            Post Skill
+          </button>
+          <button
+            onClick={() => navigate("/browse-skill")}
+            className="bg-white text-violet-600 font-semibold px-3 py-1 rounded-lg hover:bg-violet-100 transition"
+          >
+            Browse Skills
+          </button>
+        </div>
       </div>
 
       {/* Center Form */}
       <div className="flex flex-1 justify-center items-center">
-        <div className="bg-white p-8 rounded-2xl shadow-lg w-[350px] border border-gray-200">
+        <div className="bg-white/95 p-8 rounded-2xl shadow-lg w-[350px] border border-gray-200">
           <h1 className="text-2xl font-bold mb-4 text-violet-600 text-center">
             Post a Skill
           </h1>
@@ -135,8 +148,8 @@ export default function PostSkill() {
       </div>
 
       {/* Footer */}
-      <footer className="w-full bg-violet-600 py-4 shadow-inner text-center text-white text-sm">
-        © 2025 Knowledge Barter. All rights reserved.
+      <footer className="w-full bg-violet-600 bg-opacity-90 py-4 text-center text-white text-sm">
+        © 2025 <span className="font-semibold">KnowledgeBarter</span>. All rights reserved.
       </footer>
     </div>
   );
