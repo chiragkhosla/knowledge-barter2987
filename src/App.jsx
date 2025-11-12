@@ -6,7 +6,6 @@ import Signup from "./Signup";
 import PostSkill from "./PostSkill"; 
 import BrowseSkill from "./BrowseSkill";
 import ViewSkill from "./ViewSkill";
-import Chat from "./chat";
 import AboutUs from "./AboutUs"
 
 
