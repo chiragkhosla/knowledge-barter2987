@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "./firebase"; 
+import { auth } from "./firebase";
 
 const Signup = () => {
   const [email, setEmail] = useState("");
@@ -17,19 +17,19 @@ const Signup = () => {
     setMessageClass("");
 
     if (!email || !password || !confirmPassword) {
-      setMessage("⚠️ Please fill all the required fields!");
+      setMessage("Required fields not filled");
       setMessageClass("text-center mt-2 text-red-600");
       return;
     }
 
     if (password !== confirmPassword) {
-      setMessage("⚠️ Passwords do not match!");
+      setMessage("Password Mismatch");
       setMessageClass("text-center mt-2 text-red-600");
       return;
     }
 
     if (password.length < 8) {
-      setMessage("⚠️ Password must be at least 8 characters.");
+      setMessage("Password must be of 8 characters");
       setMessageClass("text-center mt-2 text-red-600");
       return;
     }
@@ -37,23 +37,23 @@ const Signup = () => {
     try {
       setLoading(true);
       await createUserWithEmailAndPassword(auth, email.trim(), password.trim());
-      setMessage("✅ Registration successful! Redirecting to Login...");
+      setMessage("Registration Successful. Redirecting.....");
       setMessageClass("text-center mt-2 text-green-600");
 
-      // clear form
+  
       setEmail("");
       setPassword("");
       setConfirmPassword("");
 
-      setTimeout(() => navigate("/login"), 1500);
+      setTimeout(() => navigate("/login"), 500);
     } catch (error) {
-      let errorMsg = "❌ Something went wrong!";
+      let errorMsg = "Something is wrong";
       if (error.code === "auth/email-already-in-use") {
-        errorMsg = "⚠️ This email is already registered.";
+        errorMsg = "Email already registered";
       } else if (error.code === "auth/invalid-email") {
-        errorMsg = "⚠️ Invalid email address.";
+        errorMsg = "Email not valid";
       } else if (error.code === "auth/weak-password") {
-        errorMsg = "⚠️ Password should be at least 6 characters.";
+        errorMsg = "Password must be atleast 8 characters";
       }
       setMessage(errorMsg);
       setMessageClass("text-center mt-2 text-red-600");
@@ -64,55 +64,54 @@ const Signup = () => {
 
   return (
     <div
-      className="bg-gray-100 flex flex-col min-h-screen"
+      className="min-h-screen flex flex-col items-center justify-center"
       style={{
-        backgroundImage: "url('bg.jpg')",
-        backgroundRepeat: "no-repeat",
+        backgroundImage: "url('/bg.jpg')",
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
     >
       {/* Header */}
-      <header className="w-full bg-violet-600 py-4 shadow-md">
-        <h1 className="text-center text-3xl font-bold text-white">
-          Knowledge Barter
-        </h1>
+      <header className="absolute top-0 w-full py-5 bg-violet-600 bg-opacity-90 text-center text-white text-3xl font-extrabold shadow-md">
+        Knowledge<span className="text-violet-200">Barter</span>
       </header>
 
-      {/* Form */}
+      {/* Signup Form */}
       <main className="flex-grow flex justify-center items-center">
-        <div className="bg-white p-8 rounded-lg shadow-lg flex flex-col gap-4 w-80">
-          <p className="text-2xl font-bold text-center">Sign Up</p>
+        <div className="bg-white/95 p-8 rounded-2xl shadow-lg w-[350px] border border-gray-200">
+          <h2 className="text-2xl font-bold text-center mb-6 text-violet-600">
+            Create an Account 
+          </h2>
 
           <div className="flex flex-col gap-3">
             <input
               type="email"
               placeholder="Enter Email"
-              className="border p-2 rounded"
+              className="border p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
             <input
               type="password"
               placeholder="Create Password"
-              className="border p-2 rounded"
+              className="border p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
             <input
               type="password"
               placeholder="Confirm Password"
-              className="border p-2 rounded"
+              className="border p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
             />
 
             <button
-              className={`bg-violet-600 text-white rounded py-2 hover:bg-violet-700 transition ${
-                loading ? "opacity-70 cursor-not-allowed" : ""
-              }`}
               onClick={handleRegistration}
               disabled={loading}
+              className={`mt-3 bg-gradient-to-r from-violet-600 to-purple-500 text-white py-2 rounded-lg font-semibold hover:opacity-90 transition ${
+                loading ? "opacity-70 cursor-not-allowed" : ""
+              }`}
             >
               {loading ? "Registering..." : "Sign Up"}
             </button>
@@ -120,20 +119,18 @@ const Signup = () => {
 
           {message && <p className={messageClass}>{message}</p>}
 
-          <div className="flex justify-center gap-2 text-sm">
-            <p>Already have an account?</p>
-            <Link to="/login" className="text-blue-500 hover:underline">
+          <p className="text-center mt-4 text-sm">
+            Already have an account?{" "}
+            <Link to="/login" className="text-violet-600 hover:underline font-semibold">
               Log In
             </Link>
-          </div>
+          </p>
         </div>
       </main>
 
       {/* Footer */}
-      <footer className="w-full bg-violet-600 py-4 shadow-inner mt-auto">
-        <p className="text-center text-white text-sm">
-          © 2025 Knowledge Barter. All rights reserved.
-        </p>
+      <footer className="absolute bottom-0 w-full bg-violet-600 bg-opacity-90 text-white text-center text-sm py-4">
+        © 2025 <span className="font-semibold">KnowledgeBarter</span>. All rights reserved.
       </footer>
     </div>
   );

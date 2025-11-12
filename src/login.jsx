@@ -12,85 +12,73 @@ const Login = () => {
 
   const handleLogin = async () => {
     setMessage("");
-    setMessageClass("");
-
     if (!email || !password) {
-      setMessage("⚠️ Please fill all the required fields!");
-      setMessageClass("text-center mt-2 text-red-600");
+      setMessage("Fill all the required fields");
+      setMessageClass("text-red-600 text-center");
       return;
     }
+
     try {
       await signInWithEmailAndPassword(auth, email.trim(), password.trim());
-      setMessage("✅ Login successful! Redirecting...");
-      setMessageClass("text-center mt-2 text-green-600");
-      setTimeout(() => navigate("/home"), 1500);
-    } catch (error) {
-      setMessage(`${error.message}`);
-      setMessageClass("text-center mt-2 text-red-600");
+      setMessage("Login Successful....");
+      setMessageClass("text-green-600 text-center");
+      setTimeout(() => navigate("/home"), 500);
+    } catch {
+      setMessage("Credentials are not valid");
+      setMessageClass("text-red-600 text-center");
     }
   };
 
   return (
     <div
-      className="bg-gray-100 flex flex-col min-h-screen"
+      className="min-h-screen flex flex-col items-center justify-center"
       style={{
-        backgroundImage: "url('bg.jpg')",
-        backgroundRepeat: "no-repeat",
+        backgroundImage: "url('/bg.jpg')",
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
     >
-      {/* Header */}
-      <header className="w-full bg-violet-600 py-4 shadow-md">
-        <h1 className="text-center text-3xl font-bold text-white">
-          Knowledge Barter
-        </h1>
+      <header className="absolute top-0 w-full py-5 bg-violet-600 bg-opacity-90 text-center text-white text-3xl font-extrabold shadow-md">
+        Knowledge<span className="text-violet-200">Barter</span>
       </header>
 
-      {/* Login form */}
-      <main className="flex-grow flex justify-center items-center">
-        <div className="bg-white p-8 rounded-lg shadow-lg flex flex-col gap-4 w-80">
-          <p className="text-2xl font-bold text-center">Log In</p>
+      <div className="bg-white/95 p-8 rounded-2xl shadow-lg w-[350px] border border-gray-200">
+        <h2 className="text-2xl font-bold text-center mb-6 text-violet-600">Welcome Back </h2>
 
-          <div className="flex flex-col gap-3">
-            <input
-              type="email"
-              placeholder="Enter Email"
-              className="border p-2 rounded"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <input
-              type="password"
-              placeholder="Enter Password"
-              className="border p-2 rounded"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <button
-              className="bg-violet-600 text-white rounded py-2 hover:bg-violet-700"
-              onClick={handleLogin}
-            >
-              Log In
-            </button>
-          </div>
+        <input
+          type="email"
+          placeholder="Enter Email"
+          className="w-full mb-3 border p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <input
+          type="password"
+          placeholder="Enter Password"
+          className="w-full mb-3 border p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
 
-          {message && <p className={messageClass}>{message}</p>}
+        <button
+          onClick={handleLogin}
+          className="w-full bg-gradient-to-r from-violet-500 to-purple-500 text-white py-2 rounded-lg font-semibold hover:opacity-90"
+        >
+          Log In
+        </button>
 
-          <div className="flex justify-center gap-2 text-sm">
-            <p>Don't have an account?</p>
-            <Link to="/signup" className="text-blue-500 hover:underline">
-              Sign Up
-            </Link>
-          </div>
-        </div>
-      </main>
+        {message && <p className={messageClass}>{message}</p>}
 
-      {/* Footer */}
-      <footer className="w-full bg-violet-600 py-4 shadow-inner mt-auto">
-        <p className="text-center text-white text-sm">
-          © 2025 Knowledge Barter. All rights reserved.
+        <p className="text-center mt-4 text-sm">
+          Don’t have an account?{" "}
+          <Link to="/signup" className="text-violet-600 hover:underline font-semibold">
+            Sign Up
+          </Link>
         </p>
+      </div>
+
+      <footer className="absolute bottom-0 w-full bg-violet-600 bg-opacity-90 text-white text-center text-sm py-4">
+        © 2025 <span className="font-semibold">KnowledgeBarter</span>. All rights reserved.
       </footer>
     </div>
   );

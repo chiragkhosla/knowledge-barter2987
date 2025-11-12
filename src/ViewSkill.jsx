@@ -1,22 +1,27 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { collection, getDocs, query, where } from "firebase/firestore";
-import { db } from "./firebase"; // ✅ Import Firestore instance
+import { db } from "./firebase";
 
 export default function ViewSkill() {
-  const { id } = useParams(); // skill name passed in URL
+  const { id } = useParams();
   const navigate = useNavigate();
   const [filteredTeachers, setFilteredTeachers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isScrolled, setIsScrolled] = useState(false); // ✅ Header effect
+
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 10);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   useEffect(() => {
     const fetchTeachers = async () => {
       try {
+        const skillName = decodeURIComponent(id).replace(/-/g, " ");
         const skillsRef = collection(db, "skills");
-        const q = query(
-          skillsRef,
-          where("teach", "==", decodeURIComponent(id))
-        );
+        const q = query(skillsRef, where("teach", "==", skillName));
         const querySnapshot = await getDocs(q);
 
         const skillsList = querySnapshot.docs.map((doc) => ({
@@ -49,21 +54,32 @@ export default function ViewSkill() {
         backgroundPosition: "center",
       }}
     >
-      {/* Header */}
-      <div className="w-full bg-gradient-to-r from-violet-600 to-purple-500 text-white py-4 text-center font-bold text-2xl shadow-md">
-        Knowledge Barter
+      {/* ✅ Header with Glassmorphism */}
+      <div
+        className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
+          isScrolled
+            ? "bg-white/10 backdrop-blur-md border-b border-white/20 shadow-md"
+            : "bg-gradient-to-r from-violet-600 to-purple-500"
+        } text-white py-4 px-6 flex justify-between items-center`}
+      >
+        <h1
+          className="font-bold text-2xl cursor-pointer"
+          onClick={() => navigate("/home")}
+        >
+          Knowledge Barter
+        </h1>
       </div>
 
-      {/* Main Content */}
-      <div className="flex flex-col items-center flex-1 py-10 px-4">
+      {/* ✅ Main Content */}
+      <div className="flex flex-col items-center flex-1 py-10 px-4 mt-20">
         <h1 className="text-3xl font-bold text-white mb-6 text-center">
-          People teaching "{decodeURIComponent(id)}"
+          People teaching “{decodeURIComponent(id).replace(/-/g, " ")}”
         </h1>
 
         {loading ? (
           <p className="text-white text-lg">Loading...</p>
         ) : filteredTeachers.length === 0 ? (
-          <p className="text-white font-medium text-lg">
+          <p className="text-white font-medium text-lg text-center">
             No one has registered to teach this skill yet.
           </p>
         ) : (
@@ -71,7 +87,9 @@ export default function ViewSkill() {
             {filteredTeachers.map((tutor) => (
               <div
                 key={tutor.id}
-                className="bg-white w-[300px] p-6 rounded-2xl shadow-md border border-gray-200 flex flex-col gap-3 hover:-translate-y-2 hover:shadow-2xl transition-all duration-300"
+                className="bg-white w-[300px] p-6 rounded-2xl shadow-md border border-gray-200 
+                           flex flex-col gap-3 hover:-translate-y-2 hover:shadow-2xl 
+                           transition-all duration-300"
               >
                 <h2 className="text-xl font-bold text-violet-600">
                   {tutor.name}
@@ -88,7 +106,9 @@ export default function ViewSkill() {
                 </p>
                 <button
                   onClick={() => handleConnect(tutor.name)}
-                  className="mt-3 bg-gradient-to-r from-violet-600 to-purple-500 text-white px-4 py-2 rounded-lg hover:opacity-90 font-medium transition duration-200"
+                  className="mt-3 bg-gradient-to-r from-violet-600 to-purple-500 
+                             text-white px-4 py-2 rounded-lg hover:opacity-90 
+                             font-medium transition duration-200"
                 >
                   Connect
                 </button>
@@ -99,15 +119,17 @@ export default function ViewSkill() {
 
         <button
           onClick={() => navigate("/browse-skill")}
-          className="mt-10 bg-gradient-to-r from-purple-600 to-violet-500 text-white px-6 py-2 rounded-lg font-medium hover:opacity-90"
+          className="mt-10 bg-gradient-to-r from-purple-600 to-violet-500 text-white px-6 py-2 
+                     rounded-lg font-medium hover:opacity-90 transition duration-200"
         >
           ← Back to Browse Skills
         </button>
       </div>
 
-      {/* Footer */}
-      <footer className="w-full bg-violet-600 py-4 shadow-inner text-center text-white text-sm">
-        © 2025 Knowledge Barter. All rights reserved.
+      {/* ✅ Professional Footer */}
+      <footer className="w-full bg-violet-600/90 backdrop-blur-md border-t border-white/20 py-4 
+                         text-center text-white text-sm mt-auto">
+        © 2025 <span className="font-semibold">Knowledge Barter.</span> All rights reserved.
       </footer>
     </div>
   );
