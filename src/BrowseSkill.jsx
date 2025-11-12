@@ -7,9 +7,9 @@ export default function BrowseSkills() {
   const [suggestions, setSuggestions] = useState([]);
   const [searchValue, setSearchValue] = useState("");
   const [loading, setLoading] = useState(true);
-  // ✅ Pagination States
+
   const [currentPage, setCurrentPage] = useState(1);
-  const cardsPerPage = 3; // ✅ Show 6 cards per page
+  const cardsPerPage = 6;
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -78,13 +78,13 @@ export default function BrowseSkills() {
       c.teach.toLowerCase().includes(value)
     );
     setFilteredCards(filtered);
-    setCurrentPage(1); // ✅ reset
+    setCurrentPage(1);
   };
 
   const filterByCategory = (cat) => {
     if (!cat) setFilteredCards(cards);
     else setFilteredCards(cards.filter((c) => c.category === cat));
-    setCurrentPage(1); // ✅ reset
+    setCurrentPage(1);
   };
 
    // ✅ Pagination Logic
@@ -219,7 +219,7 @@ export default function BrowseSkills() {
           </p>
         )}
       </div>
-    {/* ✅ Pagination Controls - Centered + Better Styling */}
+
   {!loading && filteredCards.length > 0 && (
     <div className="flex items-center justify-center gap-6 my-6">
       <button
@@ -251,11 +251,11 @@ export default function BrowseSkills() {
 )}
 
       
-    {/* Skill Match CTA Section - Designed Text */}
+
 <div className="max-w-4xl mx-auto bg-white/10 backdrop-blur-lg rounded-2xl shadow-xl 
               mt-10 mb-10 px-6 py-6 flex flex-col md:flex-row items-center justify-between gap-4">
 
-  {/* Designed Text */}
+
  <h2 className="text-center md:text-left text-2xl font-extrabold tracking-wide drop-shadow-md flex items-center gap-2">
   <span className="bg-gradient-to-r from-white to-purple-300 bg-clip-text text-transparent">
     Connect, Share & Grow Your Skills Together
@@ -264,7 +264,7 @@ export default function BrowseSkills() {
 </h2>
 
 
-  {/* Button */}
+
   <a
     href="/post-skill"
     className="rounded-lg px-6 py-3 text-base font-semibold bg-white text-purple-700 
