@@ -17,7 +17,7 @@ export default function BrowseSkills() {
   const API_URL =
     "https://firestore.googleapis.com/v1/projects/knowledge-barter-99eaa/databases/(default)/documents/skills?key=AIzaSyALqQrKm5fR0qEZ89jmaq3ulfhWZMwuce4";
 
-  // ✅ Scroll effect for glass header
+
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 10);
     window.addEventListener("scroll", handleScroll);
@@ -238,7 +238,6 @@ export default function BrowseSkills() {
         )}
       </div>
 
-      {/* Pagination */}
       {!loading && filteredCards.length > 0 && (
         <div className="flex items-center justify-center gap-6 my-6">
           <button
