@@ -72,7 +72,7 @@ export default function PostSkill() {
         backgroundPosition: "center",
       }}
     >
-      {/* 🔹 Scroll-based Header */}
+
       <div
         className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
           isScrolled
@@ -145,7 +145,7 @@ export default function PostSkill() {
         </div>
       </div>
 
-      {/* Footer */}
+
       <footer className="w-full bg-violet-600 py-4 shadow-inner text-center text-white text-sm">
         © 2025 Knowledge Barter. All rights reserved.
       </footer>

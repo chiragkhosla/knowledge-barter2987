@@ -71,12 +71,12 @@ const Signup = () => {
         backgroundPosition: "center",
       }}
     >
-      {/* Header */}
+
       <header className="absolute top-0 w-full py-5 bg-violet-600 bg-opacity-90 text-center text-white text-3xl font-extrabold shadow-md">
         Knowledge<span className="text-violet-200">Barter</span>
       </header>
 
-      {/* Signup Form */}
+
       <main className="flex-grow flex justify-center items-center">
         <div className="bg-white/95 p-8 rounded-2xl shadow-lg w-[350px] border border-gray-200">
           <h2 className="text-2xl font-bold text-center mb-6 text-violet-600">
@@ -128,7 +128,7 @@ const Signup = () => {
         </div>
       </main>
 
-      {/* Footer */}
+
       <footer className="absolute bottom-0 w-full bg-violet-600 bg-opacity-90 text-white text-center text-sm py-4">
         © 2025 <span className="font-semibold">KnowledgeBarter</span>. All rights reserved.
       </footer>

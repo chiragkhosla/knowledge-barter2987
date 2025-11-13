@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { collection, getDocs, query, where } from "firebase/firestore";
-import { db } from "./firebase";
+import { collection, getDocs, query, where, doc, setDoc } from "firebase/firestore";
+import { db, auth } from "./firebase";
 
 export default function ViewSkill() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [filteredTeachers, setFilteredTeachers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [isScrolled, setIsScrolled] = useState(false); // ✅ Header effect
+  const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 10);
@@ -31,7 +31,7 @@ export default function ViewSkill() {
 
         setFilteredTeachers(skillsList);
       } catch (error) {
-        console.error("❌ Error fetching skills:", error);
+        console.error("Error fetching skills:", error);
         alert("Error loading data from database.");
       } finally {
         setLoading(false);
@@ -41,8 +41,43 @@ export default function ViewSkill() {
     fetchTeachers();
   }, [id]);
 
-  const handleConnect = (teacherName) => {
-    alert(`✅ Connection request sent to ${teacherName}!`);
+  const handleConnect = async (tutorUid, tutorName) => {
+    const user = auth.currentUser;
+
+    if (!user) {
+      alert("Please log in first!");
+      navigate("/login");
+      return;
+    }
+
+    if (!tutorUid) {
+      alert("Chat cannot start because this user has no UID saved.");
+      return;
+    }
+
+    const chatId =
+      user.uid < tutorUid ? `${user.uid}_${tutorUid}` : `${tutorUid}_${user.uid}`;
+
+    await setDoc(doc(db, "users", user.uid, "chatList", chatId), {
+      chatId,
+      otherUserUid: tutorUid,
+      otherUserName: tutorName,
+      updatedAt: Date.now(),
+    });
+
+    await setDoc(doc(db, "users", tutorUid, "chatList", chatId), {
+      chatId,
+      otherUserUid: user.uid,
+      otherUserName: user.email,
+      updatedAt: Date.now(),
+    });
+
+    navigate(`/chat/${chatId}`, {
+      state: {
+        receiverUid: tutorUid,
+        receiverName: tutorName,
+      },
+    });
   };
 
   return (
@@ -54,7 +89,6 @@ export default function ViewSkill() {
         backgroundPosition: "center",
       }}
     >
-      {/* ✅ Header with Glassmorphism */}
       <div
         className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
           isScrolled
@@ -70,7 +104,6 @@ export default function ViewSkill() {
         </h1>
       </div>
 
-      {/* ✅ Main Content */}
       <div className="flex flex-col items-center flex-1 py-10 px-4 mt-20">
         <h1 className="text-3xl font-bold text-white mb-6 text-center">
           People teaching “{decodeURIComponent(id).replace(/-/g, " ")}”
@@ -91,24 +124,15 @@ export default function ViewSkill() {
                            flex flex-col gap-3 hover:-translate-y-2 hover:shadow-2xl 
                            transition-all duration-300"
               >
-                <h2 className="text-xl font-bold text-violet-600">
-                  {tutor.name}
-                </h2>
-                <p>
-                  <span className="font-semibold">Teaches:</span> {tutor.teach}
-                </p>
-                <p>
-                  <span className="font-semibold">Level:</span> {tutor.level}
-                </p>
-                <p>
-                  <span className="font-semibold">Wants to Learn:</span>{" "}
-                  {tutor.learn}
-                </p>
+                <h2 className="text-xl font-bold text-violet-600">{tutor.name}</h2>
+                <p><span className="font-semibold">Teaches:</span> {tutor.teach}</p>
+                <p><span className="font-semibold">Level:</span> {tutor.level}</p>
+                <p><span className="font-semibold">Wants to Learn:</span> {tutor.learn}</p>
+
                 <button
-                  onClick={() => handleConnect(tutor.name)}
-                  className="mt-3 bg-gradient-to-r from-violet-600 to-purple-500 
-                             text-white px-4 py-2 rounded-lg hover:opacity-90 
-                             font-medium transition duration-200"
+                  onClick={() => handleConnect(tutor.posterUid, tutor.name)}
+                  className="mt-3 bg-gradient-to-r from-violet-600 to-purple-500 text-white px-4 py-2 
+                             rounded-lg hover:opacity-90 font-medium transition duration-200"
                 >
                   Connect
                 </button>
@@ -126,7 +150,6 @@ export default function ViewSkill() {
         </button>
       </div>
 
-      {/* ✅ Professional Footer */}
       <footer className="w-full bg-violet-600/90 backdrop-blur-md border-t border-white/20 py-4 
                          text-center text-white text-sm mt-auto">
         © 2025 <span className="font-semibold">Knowledge Barter.</span> All rights reserved.

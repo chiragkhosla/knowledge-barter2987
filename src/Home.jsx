@@ -89,6 +89,9 @@ const Home = () => {
           <Link to="/contact" className="hover:text-gray-300">
             Contact
           </Link>
+          <Link to="/chat-list" className="hover:text-gray-300">
+            Recent Chats
+          </Link>
         </div>
 
 
