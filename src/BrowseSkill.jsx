@@ -239,7 +239,7 @@ export default function BrowseSkills() {
       </div>
 
       {!loading && filteredCards.length > 0 && (
-        <div className="flex items-center justify-center gap-6 my-6">
+        <div className="flex items-center justify-center gap-6 ">
           <button
             onClick={prevPage}
             disabled={currentPage === 1}
